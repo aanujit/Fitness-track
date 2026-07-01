@@ -18,10 +18,21 @@ export default function LoginScreen() {
     setLoading(true);
     setError('');
     try {
-      await authService.login(email, password);
+      await authService.login(email.trim(), password);
       // router.replace will happen automatically in _layout.tsx
     } catch (e: any) {
-      setError(e.message);
+      const msg = e.message || 'Login failed';
+      if (msg.includes('user-not-found') || msg.includes('invalid-credential')) {
+        setError('Invalid email or password');
+      } else if (msg.includes('wrong-password')) {
+        setError('Invalid email or password');
+      } else if (msg.includes('too-many-requests')) {
+        setError('Too many attempts. Please try again later');
+      } else if (msg.includes('invalid-email')) {
+        setError('Please enter a valid email address');
+      } else {
+        setError(msg);
+      }
     } finally {
       setLoading(false);
     }

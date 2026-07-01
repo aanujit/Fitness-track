@@ -10,7 +10,7 @@ const firebaseConfig = {
   authDomain: process.env.EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN,
   projectId: process.env.EXPO_PUBLIC_FIREBASE_PROJECT_ID,
   storageBucket: process.env.EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: process.env.EXPO_PUBLIC_FIREBASE_MESSSAGING_SENDER_ID,
+  messagingSenderId: process.env.EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
   appId: process.env.EXPO_PUBLIC_FIREBASE_APP_ID,
   measurementId: process.env.EXPO_PUBLIC_FIREBASE_MEASUREMENT_ID,
   databaseURL: process.env.EXPO_PUBLIC_FIREBASE_DATABASE_URL,
@@ -29,11 +29,16 @@ try {
 
 const database = getDatabase(app);
 
-const authInitializedPromise = new Promise<void>((resolve) => {
-  const unsubscribe = auth.onAuthStateChanged(() => {
-    unsubscribe();
-    resolve();
-  });
-});
+const authInitializedPromise = Promise.race([
+  new Promise<void>((resolve) => {
+    const unsubscribe = auth.onAuthStateChanged(() => {
+      unsubscribe();
+      resolve();
+    });
+  }),
+  new Promise<void>((_, reject) =>
+    setTimeout(() => reject(new Error('Auth initialization timed out after 10s')), 10000)
+  ),
+]);
 
 export { app, auth, database, authInitializedPromise };

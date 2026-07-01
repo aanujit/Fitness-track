@@ -16,17 +16,41 @@ export default function SignupScreen() {
       setError('Please fill in all fields');
       return;
     }
+
+    // Basic email format check
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email.trim())) {
+      setError('Please enter a valid email address');
+      return;
+    }
+
+    if (password.length < 6) {
+      setError('Password must be at least 6 characters');
+      return;
+    }
+
     if (password !== confirmPassword) {
       setError('Passwords do not match');
       return;
     }
+
     setLoading(true);
     setError('');
     try {
-      await authService.signup(email, password);
+      await authService.signup(email.trim(), password);
       // layout will automatically redirect on auth change
     } catch (e: any) {
-      setError(e.message);
+      // Make Firebase errors more user-friendly
+      const msg = e.message || 'Signup failed';
+      if (msg.includes('email-already-in-use')) {
+        setError('An account with this email already exists');
+      } else if (msg.includes('invalid-email')) {
+        setError('Please enter a valid email address');
+      } else if (msg.includes('weak-password')) {
+        setError('Password is too weak. Use at least 6 characters');
+      } else {
+        setError(msg);
+      }
     } finally {
       setLoading(false);
     }

@@ -31,7 +31,12 @@ yarn-error.*
 *.pem
 
 # local env files
+.env
 .env*.local
+
+# Firebase service files (contain project-specific keys)
+google-services.json
+google-services.plist
 
 # typescript
 *.tsbuildinfo

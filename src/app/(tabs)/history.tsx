@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useMemo } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Platform } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Platform, ActivityIndicator } from 'react-native';
 import { stepService, StepHistoryRecord } from '@/services/stepService';
 import { BarChart } from 'react-native-gifted-charts';
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -10,20 +10,23 @@ export default function HistoryScreen() {
   const [sortOrder, setSortOrder] = useState<'desc' | 'asc'>('desc');
   const [filterDate, setFilterDate] = useState<Date | null>(null);
   const [showDatePicker, setShowDatePicker] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     loadHistory();
   }, []);
 
   const loadHistory = async () => {
-    // Generate mock history if empty for testing purposes
-    const data = await stepService.getHistory();
-    if (data.length === 0) {
-      await stepService.generateMockHistory();
-      const mockData = await stepService.getHistory();
-      setHistory(mockData);
-    } else {
+    setLoading(true);
+    setError(null);
+    try {
+      const data = await stepService.getHistory();
       setHistory(data);
+    } catch (e: any) {
+      setError(e.message || 'Failed to load step history');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -65,7 +68,9 @@ export default function HistoryScreen() {
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
       <Text style={styles.title}>Weekly Summary</Text>
       <View style={styles.chartContainer}>
-        {chartData.length > 0 ? (
+        {loading ? (
+          <ActivityIndicator color="#4ade80" style={{ marginVertical: 30 }} />
+        ) : chartData.length > 0 ? (
           <BarChart
             data={chartData}
             barWidth={22}
@@ -83,6 +88,15 @@ export default function HistoryScreen() {
           <Text style={styles.emptyText}>No data available for chart</Text>
         )}
       </View>
+
+      {error && (
+        <View style={styles.errorContainer}>
+          <Text style={styles.errorText}>{error}</Text>
+          <TouchableOpacity style={styles.retryBtn} onPress={loadHistory}>
+            <Text style={styles.retryText}>Retry</Text>
+          </TouchableOpacity>
+        </View>
+      )}
 
       <View style={styles.controlsRow}>
         <TouchableOpacity 
@@ -125,15 +139,17 @@ export default function HistoryScreen() {
 
       <Text style={styles.title}>History Log</Text>
       <View style={styles.list}>
-        {displayedHistory.length > 0 ? (
-          displayedHistory.map((item, index) => (
-            <View key={index} style={styles.historyCard}>
+        {loading ? (
+          <ActivityIndicator color="#4ade80" style={{ marginVertical: 20 }} />
+        ) : displayedHistory.length > 0 ? (
+          displayedHistory.map((item) => (
+            <View key={item.date} style={styles.historyCard}>
               <View>
                 <Text style={styles.historyDate}>{getReadableDate(item.date)}</Text>
-                <Text style={styles.historyGoal}>Goal: {item.goal}</Text>
+                <Text style={styles.historyGoal}>Goal: {item.goal.toLocaleString()}</Text>
               </View>
               <Text style={[styles.historySteps, { color: item.steps >= item.goal ? '#4ade80' : '#fff' }]}>
-                {item.steps}
+                {item.steps.toLocaleString()}
               </Text>
             </View>
           ))
@@ -215,5 +231,31 @@ const styles = StyleSheet.create({
     color: '#aaa',
     textAlign: 'center',
     marginVertical: 20,
-  }
+  },
+  errorContainer: {
+    backgroundColor: '#1e1e1e',
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 20,
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#ef4444',
+  },
+  errorText: {
+    color: '#ef4444',
+    fontSize: 14,
+    fontWeight: '600',
+    marginBottom: 10,
+    textAlign: 'center',
+  },
+  retryBtn: {
+    backgroundColor: '#333',
+    paddingHorizontal: 20,
+    paddingVertical: 8,
+    borderRadius: 8,
+  },
+  retryText: {
+    color: '#fff',
+    fontWeight: '600',
+  },
 });

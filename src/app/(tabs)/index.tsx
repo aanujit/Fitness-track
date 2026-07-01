@@ -24,11 +24,16 @@ export default function DashboardScreen() {
     setTempGoal(dailyGoal.toString());
   }, [dailyGoal, editingGoal]); // Reset when opening modal
 
-  // Save daily summary when steps update
+  // Save daily summary debounced — avoids a Firebase write on every single step.
+  // Saves at most once every 30 seconds, and once more on unmount.
   useEffect(() => {
     if (!user) return;
-    const today = getCurrentDateString();
-    stepService.saveDailySummary(today, currentSteps, dailyGoal);
+    const timer = setTimeout(() => {
+      const today = getCurrentDateString();
+      stepService.saveDailySummary(today, currentSteps, dailyGoal);
+    }, 30000); // 30-second debounce
+
+    return () => clearTimeout(timer);
   }, [currentSteps, dailyGoal, user]);
 
   const handleSaveGoal = () => {

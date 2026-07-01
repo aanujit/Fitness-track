@@ -5,12 +5,16 @@ import { useColorScheme, View } from 'react-native';
 
 import { AnimatedSplashOverlay } from '@/components/animated-icon';
 import { useAuthStore } from '@/store/authStore';
+import { useUpdateChecker } from '@/hooks/useUpdateChecker';
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
   const { restoreToken, token, isLoading } = useAuthStore();
   const segments = useSegments();
   const router = useRouter();
+
+  // Check for OTA updates on app start
+  useUpdateChecker();
 
   useEffect(() => {
     restoreToken();

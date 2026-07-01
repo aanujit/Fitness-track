@@ -4,11 +4,27 @@
   "version": "1.0.0",
   "scripts": {
     "start": "expo start",
-    "reset-project": "node ./scripts/reset-project.js",
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "lint": "expo lint"
+    "lint": "expo lint",
+    "typecheck": "tsc --noEmit",
+    "prebuild": "expo prebuild",
+    "prebuild:clean": "expo prebuild --clean",
+    "build:dev:android": "eas build --profile development --platform android",
+    "build:dev:ios": "eas build --profile development --platform ios",
+    "build:preview:android": "eas build --profile preview --platform android",
+    "build:preview:ios": "eas build --profile preview --platform ios",
+    "build:prod:android": "eas build --profile production --platform android",
+    "build:prod:ios": "eas build --profile production --platform ios",
+    "build:prod:all": "eas build --profile production --platform all",
+    "submit:android": "eas submit --profile production --platform android",
+    "submit:ios": "eas submit --profile production --platform ios",
+    "update:preview": "eas update --branch preview --message \"OTA Update\"",
+    "update:prod": "eas update --branch production --message \"OTA Update\"",
+    "firebase:deploy:rules": "firebase deploy --only database",
+    "firebase:deploy:all": "firebase deploy",
+    "reset-project": "node ./scripts/reset-project.js"
   },
   "dependencies": {
     "@expo/vector-icons": "^15.1.1",
@@ -36,6 +52,7 @@
     "expo-status-bar": "~55.0.6",
     "expo-symbols": "~55.0.9",
     "expo-system-ui": "~55.0.19",
+    "expo-updates": "~55.0.25",
     "expo-web-browser": "~55.0.17",
     "firebase": "^12.15.0",
     "react": "19.2.0",
@@ -53,6 +70,8 @@
   },
   "devDependencies": {
     "@types/react": "~19.2.2",
+    "eslint": "^9.0.0",
+    "eslint-config-expo": "~55.0.1",
     "typescript": "~5.9.2"
   },
   "private": true

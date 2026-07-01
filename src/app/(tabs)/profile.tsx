@@ -1,9 +1,22 @@
-import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, ActivityIndicator } from 'react-native';
 import { useAuthStore } from '@/store/authStore';
+import { authService } from '@/services/authService';
 
 export default function ProfileScreen() {
-  const { logout, user } = useAuthStore();
+  const { user } = useAuthStore();
+  const [loggingOut, setLoggingOut] = useState(false);
+
+  const handleLogout = async () => {
+    setLoggingOut(true);
+    try {
+      await authService.logout();
+    } catch (e: any) {
+      console.error('Logout failed:', e.message);
+    } finally {
+      setLoggingOut(false);
+    }
+  };
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
@@ -19,8 +32,12 @@ export default function ProfileScreen() {
         </View>
       </View>
 
-      <TouchableOpacity style={styles.logoutBtn} onPress={logout}>
-        <Text style={styles.logoutText}>Logout</Text>
+      <TouchableOpacity style={styles.logoutBtn} onPress={handleLogout} disabled={loggingOut}>
+        {loggingOut ? (
+          <ActivityIndicator color="#fff" />
+        ) : (
+          <Text style={styles.logoutText}>Logout</Text>
+        )}
       </TouchableOpacity>
     </ScrollView>
   );

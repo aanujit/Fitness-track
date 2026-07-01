@@ -3,7 +3,12 @@
     "users": {
       "$uid": {
         ".read": "$uid === auth.uid",
-        ".write": "$uid === auth.uid"
+        ".write": "$uid === auth.uid",
+        "history": {
+          "$date": {
+            ".validate": "newData.hasChildren(['date', 'steps', 'goal']) && newData.child('date').isString() && newData.child('steps').isNumber() && newData.child('goal').isNumber() && newData.child('steps').val() >= 0 && newData.child('goal').val() > 0 && $date.matches(/^\\d{4}-\\d{2}-\\d{2}$/)"
+          }
+        }
       }
     }
   }
