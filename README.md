@@ -3,7 +3,7 @@
 A React Native fitness and step-tracking mobile application.
 
 ## 🔗 Links
-- **Public GitHub Repository:** [Insert GitHub Repo Link Here]
+- **Public GitHub Repository:** [https://github.com/aanujit/Fitness-track.git]
 - **APK Build / EAS Preview:** [Download APK](https://expo.dev/artifacts/eas/TMeyCrnq0q9M4xPFowzbOXHV5Zx9uiOEDxFeWITuqUQ.apk)
 
 ## 🛠 Setup Instructions
