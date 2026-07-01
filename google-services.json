@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "525069603791",
+    "project_id": "fitness-track-ccc46",
+    "storage_bucket": "fitness-track-ccc46.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:525069603791:android:f3a33876cd6010190e38ba",
+        "android_client_info": {
+          "package_name": "com.fitness.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC9lO5w3pb9UJQcluQPcmyuAETQQ312Mlw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

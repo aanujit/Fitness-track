@@ -1,56 +1,73 @@
-# Welcome to your Expo app 👋
+# Fitness Track
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A React Native fitness and step-tracking mobile application.
 
-## Get started
+## 🔗 Links
+- **Public GitHub Repository:** [Insert GitHub Repo Link Here]
+- **APK Build / EAS Preview:** [Download APK](https://expo.dev/artifacts/eas/TMeyCrnq0q9M4xPFowzbOXHV5Zx9uiOEDxFeWITuqUQ.apk)
 
-1. Install dependencies
+## 🛠 Setup Instructions
 
+### Prerequisites
+- Node.js (v18 or higher recommended)
+- npm or yarn
+- Expo CLI (`npm install -g expo-cli`)
+- A Firebase project (for Authentication & Database)
+
+### Installation
+
+1. **Clone the repository** (if you haven't already):
+   ```bash
+   git clone <your-repo-link>
+   cd Fitness_Track
+   ```
+
+2. **Install dependencies**:
    ```bash
    npm install
    ```
 
-2. Start the app
+3. **Environment Variables**:
+   Copy the example environment file and update it with your Firebase configuration:
+   ```bash
+   cp .env.example .env
+   ```
+   Open `.env` and fill in the following variables using your Firebase Project settings:
+   ```env
+   EXPO_PUBLIC_FIREBASE_API_KEY=your_firebase_api_key
+   EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
+   EXPO_PUBLIC_FIREBASE_PROJECT_ID=your_project_id
+   EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET=your_project.firebasestorage.app
+   EXPO_PUBLIC_FIREBASE_MESSSAGING_SENDER_ID=your_sender_id
+   EXPO_PUBLIC_FIREBASE_APP_ID=your_app_id
+   EXPO_PUBLIC_FIREBASE_MEASUREMENT_ID=your_measurement_id
+   EXPO_PUBLIC_FIREBASE_DATABASE_URL=https://your_project-default-rtdb.firebaseio.com
+   ```
 
+4. **Start the Development Server**:
    ```bash
    npx expo start
    ```
+   You can run the app on an Android Emulator, iOS Simulator, or a physical device using Expo Go.
 
-In the output, you'll find options to open the app in a
+## ☁️ Backend Setup
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+This project uses **Firebase** as its backend for Authentication and Realtime Database/Firestore. There is no custom backend server to deploy, as Firebase acts as a serverless backend.
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+- **Authentication**: Email/Password authentication must be enabled in the Firebase Console.
+- **Database**: Ensure your database rules allow authenticated users to read and write their own data.
 
-## Get a fresh project
+## 🔑 Test Credentials
 
-When you're ready, run:
+Use the following pre-created account to test the application:
 
-```bash
-npm run reset-project
-```
+- **Email**: `anujitacharya@gmail.com`
+- **Password**: `Admin@123`
+*(Note to evaluator: If this account does not exist, please register a new account using these credentials on the sign-up screen).*
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+## ⚖️ Trade-offs & Known Limitations
 
-### Other setup steps
+- **Pedometer Accuracy**: The app relies on device sensors (`expo-sensors` Pedometer) which might have varying accuracy across different Android/iOS devices. It cannot background-sync step data indefinitely without a background task configuration, meaning steps might only update reliably when the app is active or in the foreground.
+- **Local Storage vs. Cloud Sync**: Step data is heavily reliant on real-time sync with Firebase. If offline, the app may not sync properly until an internet connection is restored (offline persistence depends on Firebase cache settings).
+- **Security**: The current JWT/Token management uses Expo Secure Store for basic auth token persistence, but standard Firebase Auth flow is primarily handling sessions.
 
-- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
